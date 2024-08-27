@@ -38,6 +38,16 @@
 <div id="chat-log"></div>
   <input id="message-input" type="text">
   <button id="send-button">Enviar</button>
+
+  <!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+  </script> -->
+     <!-- en vanilla importa una dependencia externa - toma el io - crea el socket -->
+  <script type="module">
+    import { io } from 'https://cdn.socket.io/4.7.5/socket.io.esm.min.js';
+    const socket = io(); //si no se le dan parametros dentro de los cochetes mira si hay una conexion en el mismo servidor
+  </script> 
     
 </body>
 </html>
