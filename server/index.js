@@ -11,8 +11,8 @@ app.use(logger('dev'));
 
 // Ruta para servir el archivo HTML
 app.get('/', (req, res) => {
-    // res.sendFile(__dirname + '/index.html');
-    res.send('<h1> estoy funcionando </h1>');
+    res.sendFile(process.cwd() + '/client/index.html');
+    //res.send('<h1> estoy funcionando </h1>');
   });
 
   // Iniciar servidor

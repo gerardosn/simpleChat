@@ -4,9 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>simple chat</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+        }
+        #chat-log {
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          max-height: 300px;
+          overflow-y: auto;
+        }
+        #message-input {
+          width: 70%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+        }
+        #send-button {
+          width: 20%;
+          padding: 10px;
+          border: none;
+          border-radius: 10px;
+          background-color: #4CAF50;
+          color: #fff;
+          cursor: pointer;
+        }
+      </style>
 </head>
 <body>
     <h1>Estoy funcionando</h1>
+
+<div id="chat-log"></div>
+  <input id="message-input" type="text">
+  <button id="send-button">Enviar</button>
     
 </body>
 </html>
