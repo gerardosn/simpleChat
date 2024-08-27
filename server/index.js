@@ -1,10 +1,19 @@
 import express from 'express';
 import logger from 'morgan';
+import { createServer } from 'node:http';
+import { Server } from 'socket.io';
 
 
 const port = process.env.PORT ?? 3000
 
-const app = express();
+const app = express(); //app de expres q tmb es un servidor
+const server = createServer(app); //servidor http
+const io = new Server(server); //servidor in out websocket
+
+io.on('connection', () => { //callback 
+    console.log('Nuevo cliente conectado');
+    });
+
 // Configurar logger en modo dev
 app.use(logger('dev'));
 
@@ -15,8 +24,8 @@ app.get('/', (req, res) => {
     //res.send('<h1> estoy funcionando </h1>');
   });
 
-  // Iniciar servidor
-app.listen(port, () => {
+  // Iniciar servidor y escuchado el server http
+server.listen(port, () => {
     console.log('Servidor iniciado en el puerto', port);
   });
   
