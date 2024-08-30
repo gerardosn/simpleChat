@@ -32,8 +32,17 @@
         }
       </style>
     <script type="module">
+        import { io } from 'https://cdn.socket.io/4.7.5/socket.io.esm.min.js';
+        const socket = io(); //si no se le dan parametros dentro de los cochetes mira si hay una conexion en el mismo servidor
+
         const form = document.getElementById('form');
         const input = document.getElementById('message-input');
+        const messages =  document.getElementById('messages');
+
+        socket.on('chat message', (msg)=>{
+            const item = `<li>${msg}</li>`;
+            messages.insertAdjacentHTML('beforeend', item);
+        })
 
         form.addEventListener('submit', (e)=>{
         e.preventDefault();
@@ -48,21 +57,12 @@
 <body>
     <h1>Soy un chat.</h1>
 
-<div id="chat-log"> <ul id="messages"></ul> </div>
+<div id="chat-log"> 
+    <ul id="messages"></ul> 
+</div>
 <form id="form">
-  <input id="message-input" type="text">
+  <input id="message-input" type="text" name="message" autocomplete="off">
   <button type="submit" id="send-button">Enviar</button>
 </form>
-
-  <!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <script>
-    const socket = io();
-  </script> -->
-     <!-- en vanilla importa una dependencia externa - toma el io - crea el socket -->
-  <script type="module">
-    import { io } from 'https://cdn.socket.io/4.7.5/socket.io.esm.min.js';
-    const socket = io(); //si no se le dan parametros dentro de los cochetes mira si hay una conexion en el mismo servidor
-  </script> 
-    
 </body>
 </html>

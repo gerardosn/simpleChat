@@ -17,6 +17,10 @@ io.on('connection', (socket) => { //callback  segun lo que suceda con la conexio
         console.log('Cliente desconectado');
       });
 
+      socket.on('chat message',(msg)=>{
+        io.emit('chat message', msg)
+      })
+
     });
 
 // Configurar logger en modo dev
