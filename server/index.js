@@ -10,8 +10,13 @@ const app = express(); //app de expres q tmb es un servidor
 const server = createServer(app); //servidor http
 const io = new Server(server); //servidor in out websocket
 
-io.on('connection', () => { //callback 
+io.on('connection', (socket) => { //callback  segun lo que suceda con la conexion socket
     console.log('Nuevo cliente conectado');
+
+    socket.on('disconnect', () => {
+        console.log('Cliente desconectado');
+      });
+
     });
 
 // Configurar logger en modo dev
