@@ -8,7 +8,9 @@ const port = process.env.PORT ?? 3000
 
 const app = express(); //app de expres q tmb es un servidor
 const server = createServer(app); //servidor http
-const io = new Server(server); //servidor in out websocket
+const io = new Server(server,{
+    connectionStateRecovery: {}//para recuperar los msj perdidos
+}); //servidor in out websocket
 
 io.on('connection', (socket) => { //callback  segun lo que suceda con la conexion socket
     console.log('Nuevo cliente conectado');
