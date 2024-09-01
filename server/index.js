@@ -27,7 +27,7 @@ io.on('connection', async (socket) => { //callback  segun lo que suceda con la c
             const connection = await pool.getConnection();
             const [rows] = await connection.query(sql, [msg]);
             connection.release();
-            console.log(rows);
+            console.log('insertando: ',rows);
             io.emit('chat message', msg, rows.insertId)
         } catch (e){
             console.error(e);
@@ -38,8 +38,10 @@ io.on('connection', async (socket) => { //callback  segun lo que suceda con la c
       if(!socket.recovered){//si es distinto a una recuperacion de conexion
         try{
             const connection = await pool.getConnection();
-            const sql = 'SELECT * FROM salaPrincipal ORDER BY id DESC LIMIT 5';
-            const [rows] = await connection.query(sql);
+            const arg = socket.handshake.auth.serverOffset ?? 5;
+            console.log('serveroffset',arg);
+            const sql = 'SELECT * FROM salaPrincipal WHERE id < (?)';
+            const [rows] = await connection.query(sql, [arg]);
             connection.release();
             rows.reverse().forEach((row) => {
                 io.emit('chat message', row.content)
