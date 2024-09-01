@@ -34,7 +34,11 @@
       </style>
     <script type="module">
         import { io } from 'https://cdn.socket.io/4.7.5/socket.io.esm.min.js';
-        const socket = io(); //si no se le dan parametros dentro de los cochetes mira si hay una conexion en el mismo servidor
+        const socket = io({
+            auth: {
+                serverOffset: 0 //para saber donde se quedo el cliente
+            }
+        }); //si no se le dan parametros dentro de los cochetes mira si hay una conexion en el mismo servidor
 
         const form = document.getElementById('form');
         const input = document.getElementById('message-input');
@@ -43,11 +47,11 @@
         socket.on('chat message', (msg)=>{
             const item = `<li>${msg}</li>`;
             messages.insertAdjacentHTML('beforeend', item);
+            socket.auth.serverOffset = serverOffset;
         })
 
         form.addEventListener('submit', (e)=>{
         e.preventDefault();
-        
         if (input.value){
             socket.emit('chat message', input.value);
             input.value = '';
@@ -67,7 +71,7 @@
 </form>
 <footer>
 
-<p style="color: blue; font-size: 8px; font-weight: bold; text-align: center;">&copy; Javi.er_SN &reg; nodejs.org &reg; socket.io &reg; mysql.com</p>
+<p style="text-align: center; font-size: smaller;"><small>&copy; GH\gerardoSN &reg; nodejs.org &reg; socket.io &reg; mysql.com</small></p>
 
 </footer>
 

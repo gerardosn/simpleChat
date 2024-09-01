@@ -3,6 +3,8 @@ import logger from 'morgan';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 
+import 'dotenv/config';
+import pool from '../config/db.js';
 
 const port = process.env.PORT ?? 3000
 
@@ -19,8 +21,18 @@ io.on('connection', (socket) => { //callback  segun lo que suceda con la conexio
         console.log('Cliente desconectado');
       });
 
-      socket.on('chat message',(msg)=>{
-        io.emit('chat message', msg)
+      socket.on('chat message', async (msg)=>{
+        try{
+            const sql = 'INSERT INTO salaPrincipal (content) VALUES (?)';
+            const connection = await pool.getConnection();
+            const [rows] = await connection.query(sql, [msg]);
+            connection.release();
+            console.log(rows);
+            io.emit('chat message', msg, rows.insertId)
+        } catch (e){
+            console.error(e);
+            return
+        }
       })
 
     });
