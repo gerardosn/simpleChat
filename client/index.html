@@ -47,7 +47,7 @@
         socket.on('chat message', (msg)=>{
             const item = `<li>${msg}</li>`;
             messages.insertAdjacentHTML('beforeend', item);
-            socket.auth.serverOffset = serverOffset;
+            // socket.auth.serverOffset = serverOffset;
         })
 
         form.addEventListener('submit', (e)=>{

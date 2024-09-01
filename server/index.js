@@ -14,14 +14,14 @@ const io = new Server(server,{
     connectionStateRecovery: {}//para recuperar los msj perdidos
 }); //servidor in out websocket
 
-io.on('connection', (socket) => { //callback  segun lo que suceda con la conexion socket
+io.on('connection', async (socket) => { //callback  segun lo que suceda con la conexion socket
     console.log('Nuevo cliente conectado');
 
     socket.on('disconnect', () => {
         console.log('Cliente desconectado');
       });
 
-      socket.on('chat message', async (msg)=>{
+      socket.on('chat message', async (msg)=>{//cuando el socket esta conectado intenta enviar los msj al evento chat message y los mete a la bd
         try{
             const sql = 'INSERT INTO salaPrincipal (content) VALUES (?)';
             const connection = await pool.getConnection();
@@ -34,6 +34,20 @@ io.on('connection', (socket) => { //callback  segun lo que suceda con la conexio
             return
         }
       })
+
+      if(!socket.recovered){//si es distinto a una recuperacion de conexion
+        try{
+            const connection = await pool.getConnection();
+            const sql = 'SELECT * FROM salaPrincipal ORDER BY id DESC LIMIT 5';
+            const [rows] = await connection.query(sql);
+            connection.release();
+            rows.reverse().forEach((row) => {
+                io.emit('chat message', row.content)
+            });
+        } catch (e){
+            console.log(e);
+        }
+      }
 
     });
 
