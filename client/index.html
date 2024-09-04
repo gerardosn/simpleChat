@@ -33,7 +33,7 @@
         }
       </style>
     <script type="module">
-        import { io } from 'https://cdn.socket.io/4.7.5/socket.io.esm.min.js';
+        import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js';
         const socket = io({
             auth: {
                 serverOffset: 0 //para saber donde se quedo el cliente
@@ -45,9 +45,11 @@
         const messages =  document.getElementById('messages');
 
         socket.on('chat message', (msg, serverOffset)=>{
-            const item = `<li>${serverOffset,msg}</li>`;
+
+            const item = `<li>${msg}</li>`;
             messages.insertAdjacentHTML('beforeend', item);
-            socket.auth.serverOffset = serverOffset;
+            serverOffset = socket.auth.serverOffset;
+
             console.log("posicion: ",serverOffset);
         })
 

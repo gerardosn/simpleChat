@@ -29,7 +29,7 @@ io.on('connection', async (socket) => { //callback  segun lo que suceda con la c
             const connection = await pool.getConnection();
              [rows] = await connection.query(sql, [msg]);
             connection.release();
-            console.log('insertando: ',rows);
+            console.log('insertando en bd: ',rows);
         } catch (e){
             console.error(e);
             return
@@ -42,13 +42,13 @@ io.on('connection', async (socket) => { //callback  segun lo que suceda con la c
       if(!socket.recovered){//si es distinto a una recuperacion de conexion
         try{
             const connection = await pool.getConnection();
-            const arg = socket.handshake.auth.serverOffset ?? 5;
-            console.log('posicion del server serveroffset',arg);
-            const sql = 'SELECT * FROM salaPrincipal WHERE id > (?)';
+            const arg = socket.handshake.auth.serverOffset ?? 0;
+            console.log('posicion en el server serveroffset',arg);
+            const sql = 'SELECT * FROM salaPrincipal WHERE id > ?';
             const [rows] = await connection.query(sql, arg);
             connection.release();
-            rows.reverse().forEach((row) => {
-                io.emit('chat message', row.content)
+            rows.forEach((row) => {
+                socket.emit('chat message', row.content)//es un socket.emit i no un io.emit, el ultimo les envia a todos. el 1ro le envia solo a los nuevos
             });
         } catch (e){
             console.log(e);
