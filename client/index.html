@@ -13,8 +13,10 @@
           padding: 20px;
           border: 1px solid #ccc;
           border-radius: 10px;
-          max-height: 300px;
-          overflow-y: auto;
+          height: 75vh;
+          /* max-height: 75vh; */
+          overflow-y:scroll;
+          scroll-behavior: smooth;
         }
         #message-input {
           width: 70%;
@@ -43,15 +45,25 @@
         const form = document.getElementById('form');
         const input = document.getElementById('message-input');
         const messages =  document.getElementById('messages');
+        const chatlog =  document.getElementById('chat-log');
+
 
         socket.on('chat message', (msg, serverOffset)=>{
 
             const item = `<li>${msg}</li>`;
             messages.insertAdjacentHTML('beforeend', item);
+            // messages.scrollTop = messages.scrollHeight;
+            
             serverOffset = socket.auth.serverOffset;
-
-            console.log("posicion: ",serverOffset);
+            console.log("posicion msj lado cliente: ",serverOffset);
+            
+            chatlog.scrollTo({
+              top: chatlog.scrollHeight,
+              behavior: 'smooth',
+            });
+            console.log("posicion scroll: ",messages.scrollHeight);
         })
+        
 
         form.addEventListener('submit', (e)=>{
         e.preventDefault();
