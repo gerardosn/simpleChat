@@ -13,12 +13,17 @@ const server = createServer(app); //servidor http
 const io = new Server(server,{
     connectionStateRecovery: {}//para recuperar los msj perdidos
 }); //servidor in out websocket
+let usuConectados = 0;//inicio la var de susuarios conectados fuera de la conex io
 
 io.on('connection', async (socket) => { //callback  segun lo que suceda con la conexion socket
-    console.log('Nuevo cliente conectado');
+  
+  usuConectados++;
+  console.log('Nuevo cliente conectado');
 
     socket.on('disconnect', () => {
-        console.log('Cliente desconectado');
+        usuConectados--;
+        console.log('Cliente desconectado. Total: ',usuConectados);
+        io.emit('sendCantUsus', usuConectados);
       });
 
       socket.on('chat message', async (msg)=>{//cuando el socket esta conectado intenta enviar los msj al evento chat message y los mete a la bd
@@ -35,7 +40,9 @@ io.on('connection', async (socket) => { //callback  segun lo que suceda con la c
             return
         }
 
-        io.emit('chat message', msg, rows.insertId)
+        io.emit('chat message', msg, rows.insertId);
+        io.emit('sendCantUsus', usuConectados);
+
 
       })
 
@@ -49,7 +56,10 @@ io.on('connection', async (socket) => { //callback  segun lo que suceda con la c
             connection.release();
             rows.forEach((row) => {
                 socket.emit('chat message', row.content)//es un socket.emit i no un io.emit, el ultimo les envia a todos. el 1ro le envia solo a los nuevos
-            });
+                io.emit('sendCantUsus', usuConectados);
+                console.log('Total usus: ',usuConectados);
+
+              });
         } catch (e){
             console.log(e);
         }

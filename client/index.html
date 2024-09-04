@@ -13,9 +13,9 @@
           padding: 20px;
           border: 1px solid #ccc;
           border-radius: 10px;
-          height: 75vh;
-          /* max-height: 75vh; */
-          overflow-y:scroll;
+          height: auto;
+          max-height: 75vh;
+          overflow-y:auto;
           scroll-behavior: smooth;
         }
         #message-input {
@@ -46,9 +46,13 @@
         const input = document.getElementById('message-input');
         const messages =  document.getElementById('messages');
         const chatlog =  document.getElementById('chat-log');
-
+        
+        socket.on('sendCantUsus', (usuConectados) => {
+          document.getElementById('usuConectados').textContent = usuConectados;
+        });
 
         socket.on('chat message', (msg, serverOffset)=>{
+
 
             const item = `<li>${msg}</li>`;
             messages.insertAdjacentHTML('beforeend', item);
@@ -75,7 +79,8 @@
     </script>
 </head>
 <body>
-    <h1>Soy un chat.</h1>
+    <h1 style="padding: 0; border: 0; margin: 0;">Soy un chat.</h1>
+    <p style="text-align: left; font-size: smaller; color: green; padding: 0; border: 0; margin: 0;">Usuarios conectados: <span id="usuConectados">0</span></p>
 
 <div id="chat-log"> 
     <ul id="messages"></ul> 
