@@ -45,10 +45,10 @@
         const messages =  document.getElementById('messages');
 
         socket.on('chat message', (msg, serverOffset)=>{
-            const item = `<li>${msg}</li>`;
+            const item = `<li>${serverOffset,msg}</li>`;
             messages.insertAdjacentHTML('beforeend', item);
             socket.auth.serverOffset = serverOffset;
-            console.log(serverOffset);
+            console.log("posicion: ",serverOffset);
         })
 
         form.addEventListener('submit', (e)=>{

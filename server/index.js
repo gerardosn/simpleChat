@@ -22,26 +22,30 @@ io.on('connection', async (socket) => { //callback  segun lo que suceda con la c
       });
 
       socket.on('chat message', async (msg)=>{//cuando el socket esta conectado intenta enviar los msj al evento chat message y los mete a la bd
+        let rows;
+
         try{
             const sql = 'INSERT INTO salaPrincipal (content) VALUES (?)';
             const connection = await pool.getConnection();
-            const [rows] = await connection.query(sql, [msg]);
+             [rows] = await connection.query(sql, [msg]);
             connection.release();
             console.log('insertando: ',rows);
-            io.emit('chat message', msg, rows.insertId)
         } catch (e){
             console.error(e);
             return
         }
+
+        io.emit('chat message', msg, rows.insertId)
+
       })
 
       if(!socket.recovered){//si es distinto a una recuperacion de conexion
         try{
             const connection = await pool.getConnection();
             const arg = socket.handshake.auth.serverOffset ?? 5;
-            console.log('serveroffset',arg);
-            const sql = 'SELECT * FROM salaPrincipal WHERE id < (?)';
-            const [rows] = await connection.query(sql, [arg]);
+            console.log('posicion del server serveroffset',arg);
+            const sql = 'SELECT * FROM salaPrincipal WHERE id > (?)';
+            const [rows] = await connection.query(sql, arg);
             connection.release();
             rows.reverse().forEach((row) => {
                 io.emit('chat message', row.content)
